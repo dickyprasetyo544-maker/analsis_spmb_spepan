@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - SPMB SMPN 8 Probolinggo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        /* === GAYA PREMIUM & RESPONSIVE === */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fa;
+            overflow-x: hidden;
+        }
+        
+        #wrapper { display: flex; width: 100vw; height: 100vh; }
+        
+        /* Sidebar Mewah */
+        #sidebar-wrapper {
+            width: 260px;
+            flex-shrink: 0;
+            transition: all 0.3s ease-in-out;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            z-index: 1050;
+        }
+        
+        #page-content-wrapper {
+            flex-grow: 1;
+            overflow-y: auto;
+            transition: all 0.3s ease-in-out;
+            background-color: #f8fafc;
+        }
+
+        .sidebar-link {
+            color: #94a3b8;
+            text-decoration: none;
+            padding: 14px 20px;
+            display: block;
+            border-radius: 12px;
+            margin: 8px 15px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .sidebar-link:hover, .sidebar-link.active {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            transform: translateX(5px);
+        }
+
+        /* Card Premium */
+        .card-premium {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.02);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card-premium:hover {
+            box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+        }
+
+        /* Custom Scrollbar untuk Tabel Admin */
+        .table-container { 
+            max-height: 400px; 
+            overflow-y: auto; 
+            border-radius: 12px;
+        }
+        .table-container::-webkit-scrollbar { width: 6px; height: 6px; }
+        .table-container::-webkit-scrollbar-track { background: #f8fafc; border-radius: 8px; }
+        .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+        .table-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Floating Button CSS */
+        .dropup-floating {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1060;
+        }
+        .float-info {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+            color: #fff;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        .float-info:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(13, 110, 253, 0.4) !important;
+        }
+
+        /* Responsif HP & Tablet */
+        @media (max-width: 991.98px) {
+            #sidebar-wrapper {
+                margin-left: -260px;
+                position: fixed;
+                height: 100vh;
+            }
+            #wrapper.toggled #sidebar-wrapper {
+                margin-left: 0;
+                box-shadow: 10px 0 30px rgba(0,0,0,0.2);
+            }
+            #wrapper.toggled::after {
+                content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(0,0,0,0.5); z-index: 1040;
+            }
+            .dropup-floating {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            /* Penyesuaian teks welcome di layar kecil */
+            #welcomeText {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="wrapper">
+        <div class="text-white shadow-lg" id="sidebar-wrapper">
+            <div class="p-4 fw-bold fs-5 border-bottom border-secondary text-center text-white" style="letter-spacing: 1px;">
+                🎓 SPMB SMPN 8
+            </div>
+            <div class="mt-4" id="menuSidebar">
+                <a href="dashboard.html" class="sidebar-link active"><i class="bi bi-grid-fill me-2"></i> Dashboard</a>
+                <a href="master-nilai.html" class="sidebar-link"><i class="bi bi-file-earmark-spreadsheet-fill me-2"></i> Master Nilai</a>
+                <a href="analisis-peluang.html" class="sidebar-link"><i class="bi bi-people-fill me-2"></i> Peluang Siswa</a>
+                <a href="hitung-peluang.html" class="sidebar-link"><i class="bi bi-calculator-fill me-2"></i> Hitung Peluang</a>
+                <a href="kelola-passing-grade.html" class="sidebar-link d-none" id="menuAdminPG"><i class="bi bi-gear-fill me-2"></i> Kelola Passing Grade</a>
+            </div>
+        </div>
+
+        <div id="page-content-wrapper">
+            
+            <nav class="navbar navbar-expand-lg bg-white shadow-sm px-3 py-3 px-md-4 sticky-top">
+                <div class="d-flex align-items-center w-100 justify-content-between">
+                    <div class="d-flex align-items-center gap-2 gap-md-3">
+                        <button class="btn btn-light d-lg-none border-0 shadow-sm" id="menu-toggle">
+                            <i class="bi bi-list fs-4"></i>
+                        </button>
+                        <h5 class="mb-0 fw-bold text-primary d-none d-lg-block" id="pageTitle">Beranda</h5>
+                    </div>
+                    
+                    <div class="d-flex align-items-center gap-2 gap-md-3">
+                        <div class="text-end">
+                            <span class="text-dark fw-bold d-block" id="welcomeText" style="line-height: 1;">Memuat...</span>
+                            <small class="text-muted fw-semibold" id="roleText" style="font-size: 0.75rem;">Role</small>
+                        </div>
+                        <button class="btn btn-danger btn-sm rounded-pill fw-bold px-3 shadow-sm" onclick="logout()">
+                            <i class="bi bi-power"></i> <span class="d-none d-md-inline">Keluar</span>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container-fluid p-3 p-md-4 p-lg-5">
+                
+                <div class="card card-premium mb-4 border-0">
+                    <div class="card-body p-4 p-md-5">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-3 me-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                <i class="bi bi-info-circle-fill fs-3"></i>
+                            </div>
+                            <div>
+                                <h4 class="fw-bold mb-1 text-dark">Informasi Pendaftaran SPMB</h4>
+                                <p class="text-muted mb-0 fs-6">Selamat datang di Panduan Seleksi Penerimaan Murid Baru.</p>
+                            </div>
+                        </div>
+                        <hr class="text-muted opacity-10 mb-4">
+                        
+                        <div class="position-relative ms-3 border-start border-2 border-primary border-opacity-25 pb-1 mt-4">
+                            
+                            <div class="position-relative mb-4 ps-4">
+                                <span class="position-absolute top-0 start-0 translate-middle p-2 bg-primary border border-2 border-white rounded-circle shadow-sm"></span>
+                                <div class="d-inline-block bg-primary bg-opacity-10 text-primary fw-bold px-3 py-1 rounded-pill small mb-2">
+                                    <i class="bi bi-clock me-1"></i> 11 - 12 Juni
+                                </div>
+                                <h5 class="fw-bold text-dark mb-1">Tahap 1: Domisili</h5>
+                                <p class="text-muted small mb-2"><i class="bi bi-info-circle me-1"></i>Penentuan kuota berdasarkan rayon tiap sekolah.</p>
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <span class="badge bg-primary text-white px-3 py-2 rounded-pill"><i class="bi bi-building me-1"></i> Kuota SMA: 35%</span>
+                                    <span class="badge bg-success text-white px-3 py-2 rounded-pill"><i class="bi bi-tools me-1"></i> Kuota SMK: 10%</span>
+                                </div>
+                            </div>
+
+                            <div class="position-relative mb-4 ps-4">
+                                <span class="position-absolute top-0 start-0 translate-middle p-2 bg-primary border border-2 border-white rounded-circle shadow-sm"></span>
+                                <div class="d-inline-block bg-primary bg-opacity-10 text-primary fw-bold px-3 py-1 rounded-pill small mb-2">
+                                    <i class="bi bi-clock me-1"></i> 17 - 18 Juni
+                                </div>
+                                <h5 class="fw-bold text-dark mb-3">Tahap 2: Afirmasi, Mutasi & Prestasi Lomba</h5>
+                                <div class="row g-2">
+                                    <div class="col-md-4">
+                                        <div class="p-3 bg-light rounded-4 border border-light-subtle h-100">
+                                            <span class="d-block small fw-bold text-dark mb-2">Jalur Afirmasi</span>
+                                            <div class="d-flex flex-column gap-1">
+                                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 text-start">SMA: 30%</span>
+                                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 text-start">SMK: 15%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="p-3 bg-light rounded-4 border border-light-subtle h-100">
+                                            <span class="d-block small fw-bold text-dark mb-2">Mutasi Orang Tua</span>
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 text-start w-100">SMA/SMK: 5%</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="p-3 bg-light rounded-4 border border-light-subtle h-100">
+                                            <span class="d-block small fw-bold text-dark mb-2">Prestasi Hasil Lomba</span>
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 text-start w-100">SMA/SMK: 5%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="position-relative mb-4 ps-4">
+                                <span class="position-absolute top-0 start-0 translate-middle p-2 bg-primary border border-2 border-white rounded-circle shadow-sm"></span>
+                                <div class="d-inline-block bg-primary bg-opacity-10 text-primary fw-bold px-3 py-1 rounded-pill small mb-2">
+                                    <i class="bi bi-clock me-1"></i> 24 - 25 Juni
+                                </div>
+                                <h5 class="fw-bold text-dark mb-1">Tahap 3: Prestasi Akademik SMA</h5>
+                                <div class="d-flex gap-2 mt-2">
+                                    <span class="badge bg-primary text-white px-3 py-2 rounded-pill"><i class="bi bi-building me-1"></i> Kuota SMA: 25%</span>
+                                </div>
+                            </div>
+
+                            <div class="position-relative ps-4">
+                                <span class="position-absolute top-0 start-0 translate-middle p-2 bg-primary border border-2 border-white rounded-circle shadow-sm"></span>
+                                <div class="d-inline-block bg-primary bg-opacity-10 text-primary fw-bold px-3 py-1 rounded-pill small mb-2">
+                                    <i class="bi bi-clock me-1"></i> 30 Juni - 1 Juli
+                                </div>
+                                <h5 class="fw-bold text-dark mb-1">Tahap 4: Prestasi Akademik SMK</h5>
+                                <div class="d-flex gap-2 mt-2">
+                                    <span class="badge bg-success text-white px-3 py-2 rounded-pill"><i class="bi bi-tools me-1"></i> Kuota SMK: 65%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="guruPanel" class="card card-premium mb-4 border-start border-success border-5 d-none">
+                    <div class="card-body p-4 p-md-5">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-success bg-opacity-25 text-success rounded-circle p-3 me-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                <i class="bi bi-person-video3 fs-4"></i>
+                            </div>
+                            <h5 class="fw-bold mb-0 text-dark">Ruang Kerja Guru</h5>
+                        </div>
+                        <p class="text-muted mb-0">Selamat datang, Bapak/Ibu Guru. Anda dapat menggunakan menu <strong>Master Nilai</strong> dan <strong>Analisis Peluang</strong> di sidebar untuk memantau data pendaftar dan statistik kelulusan siswa secara real-time.</p>
+                    </div>
+                </div>
+
+                <div id="adminPanel" class="card card-premium mb-4 border-start border-warning border-5 d-none">
+                    <div class="card-body p-4 p-md-5">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-warning bg-opacity-25 text-warning rounded-circle p-3 me-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                    <i class="bi bi-bell-fill fs-4"></i>
+                                </div>
+                                <h5 class="fw-bold mb-0 text-dark">Antrean Persetujuan Akun Guru</h5>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary rounded-pill shadow-sm" onclick="loadPendingUsers()">
+                                <i class="bi bi-arrow-clockwise"></i> Refresh
+                            </button>
+                        </div>
+                        
+                        <div class="table-responsive table-container border border-secondary border-opacity-10 shadow-sm">
+                            <table class="table table-hover bg-white text-center align-middle mb-0">
+                                <thead class="table-light text-secondary sticky-top">
+                                    <tr>
+                                        <th class="py-3 text-start ps-4">Nama Lengkap</th>
+                                        <th class="py-3 text-start">Username</th>
+                                        <th class="py-3">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabelPending">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="dropup dropup-floating">
+        <button class="float-info shadow-lg border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Pusat Informasi">
+            <i class="bi bi-journal-bookmark-fill"></i>
+        </button>
+        
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-custom shadow-lg border-0 rounded-4 mb-3 p-2" style="min-width: 250px;">
+            <li><h6 class="dropdown-header fw-bold text-dark"><i class="bi bi-info-circle me-1"></i> PUSAT INFORMASI</h6></li>
+            <li><hr class="dropdown-divider"></li>
+            
+            <li><a class="dropdown-item py-2 rounded-3" href="ambilpin.html"><i class="bi bi-key text-warning me-2 fs-5"></i> Tata Cara Ambil PIN</a></li>
+            <li><a class="dropdown-item py-2 rounded-3" href="kriteria.html"><i class="bi bi-sort-numeric-up text-info me-2 fs-5"></i> Kriteria Pemeringkatan</a></li>
+            <li><a class="dropdown-item py-2 rounded-3" href="jadwal.html"><i class="bi bi-calendar-check text-primary me-2 fs-5"></i> Jadwal Lengkap SPMB</a></li>
+            
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <a class="dropdown-item py-2 rounded-3 fw-bold text-success d-flex align-items-center" href="juknis.pdf" download target="_blank">
+                    <i class="bi bi-file-earmark-pdf-fill me-2 fs-5"></i> Unduh Juknis 2026
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+<script>
+    // --- 1. CEK LOGIN & PENGATURAN ROLE ---
+    const userName = localStorage.getItem('user') || 'User';
+    const rawRole = localStorage.getItem('role');
+    const userRole = (rawRole || 'siswa').toLowerCase().trim(); 
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+
+    if (isLoggedIn !== 'true') {
+        window.location.replace('index.html'); 
+    }
+
+    // Mengatur Sapaan Berdasarkan Role
+    if (userRole === 'admin') {
+        document.getElementById('welcomeText').innerText = `Selamat Datang, ${userName}`;
+        document.getElementById('roleText').innerText = 'Administrator';
+        document.getElementById('roleText').classList.replace('text-muted', 'text-danger');
+        
+        document.getElementById('adminPanel').classList.remove('d-none');
+        document.getElementById('menuAdminPG').classList.remove('d-none');
+        const guruPanel = document.getElementById('guruPanel');
+        if(guruPanel) guruPanel.remove();
+
+        loadPendingUsers(); 
+
+    } else if (userRole === 'guru') {
+        document.getElementById('welcomeText').innerText = `Selamat Datang, ${userName}`;
+        document.getElementById('roleText').innerText = 'Guru Pendidik';
+        document.getElementById('roleText').classList.replace('text-muted', 'text-success'); 
+        
+        document.getElementById('guruPanel').classList.remove('d-none');
+        const adminPanel = document.getElementById('adminPanel');
+        if(adminPanel) adminPanel.remove();
+
+    } else {
+        document.getElementById('welcomeText').innerText = `Selamat Datang, ${userName}`;
+        document.getElementById('roleText').innerText = 'Siswa Pendaftar';
+        const adminPanel = document.getElementById('adminPanel');
+        const guruPanel = document.getElementById('guruPanel');
+        if(adminPanel) adminPanel.remove();
+        if(guruPanel) guruPanel.remove();
+    }
+
+    // --- 2. TOGGLE SIDEBAR UNTUK HP ---
+    const menuToggle = document.getElementById("menu-toggle");
+    if (menuToggle) {
+        menuToggle.addEventListener("click", function(e) {
+            e.preventDefault();
+            document.getElementById("wrapper").classList.toggle("toggled");
+        });
+    }
+
+    document.addEventListener('click', function(event) {
+        const wrapper = document.getElementById('wrapper');
+        const sidebar = document.getElementById('sidebar-wrapper');
+        
+        if (wrapper && sidebar && menuToggle) {
+            const isClickInsideSidebar = sidebar.contains(event.target);
+            const isClickToggle = menuToggle.contains(event.target);
+
+            if (wrapper.classList.contains('toggled') && !isClickInsideSidebar && !isClickToggle) {
+                wrapper.classList.remove('toggled');
+            }
+        }
+    });
+
+    // --- 3. REVISI: FUNGSI LOGOUT (DENGAN SWEETALERT2) ---
+    function logout() {
+        Swal.fire({
+            title: 'Konfirmasi Keluar',
+            text: "Apakah Anda yakin ingin keluar dari sistem?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '<i class="bi bi-box-arrow-right"></i> Ya, Keluar',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                localStorage.clear(); 
+                window.location.replace('index.html'); 
+            }
+        });
+    }
+
+    // --- 4. FUNGSI-FUNGSI KHUSUS ADMIN ---
+    async function loadPendingUsers() {
+        const tbody = document.getElementById('tabelPending');
+        if(!tbody) return; 
+
+        tbody.innerHTML = `<tr><td colspan="3" class="text-muted py-5 text-center"><div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>Memuat data antrean...</td></tr>`;
+        
+        try {
+            const response = await fetch('/api/pending-users');
+            const result = await response.json();
+            tbody.innerHTML = ''; 
+
+            if (result.success && result.data.length > 0) {
+                result.data.forEach(user => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td class="fw-semibold text-dark text-start ps-4">${user.nama_lengkap || user.namaLengkap}</td>
+                            <td class="text-secondary text-start">
+                                <span class="badge bg-light text-dark border border-secondary border-opacity-25 py-2 px-3 rounded-pill">
+                                    @${user.username}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-success btn-sm m-1 rounded-pill px-3 shadow-sm fw-semibold" onclick="approveUser('${user.username}')">
+                                    <i class="bi bi-check-lg me-1"></i> Setujui
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm m-1 rounded-pill px-3 fw-semibold" onclick="rejectUser('${user.username}')">
+                                    <i class="bi bi-x-lg me-1"></i> Tolak
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } else {
+                tbody.innerHTML = `<tr><td colspan="3" class="text-muted py-5 text-center"><i class="bi bi-inbox fs-2 d-block mb-2 text-secondary"></i> Tidak ada antrean pengajuan akun saat ini.</td></tr>`;
+            }
+        } catch (error) {
+            console.error("Gagal mengambil data antrean:", error);
+            tbody.innerHTML = `<tr><td colspan="3" class="text-danger py-5 text-center"><i class="bi bi-exclamation-triangle fs-2 d-block mb-2"></i> Gagal memuat data. Pastikan server Node.js menyala.</td></tr>`;
+        }
+    }
+
+    // --- REVISI: FUNGSI APPROVE (DENGAN SWEETALERT2) ---
+    async function approveUser(username) {
+        Swal.fire({
+            title: 'Setujui Akun?',
+            text: `Anda akan memberikan akses Guru kepada @${username}.`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#198754',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Setujui!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await fetch('/api/approve-user', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: username })
+                    });
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: `Akun @${username} berhasil disetujui.`,
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    loadPendingUsers(); 
+                } catch (error) {
+                    Swal.fire('Gagal!', 'Terjadi masalah saat menghubungi server.', 'error');
+                }
+            }
+        });
+    }
+
+    // --- REVISI: FUNGSI REJECT (DENGAN SWEETALERT2) ---
+    async function rejectUser(username) {
+        Swal.fire({
+            title: 'Tolak Pengajuan?',
+            text: `Anda yakin ingin menolak dan menghapus pengajuan akun @${username}? Data ini tidak bisa dikembalikan.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Tolak & Hapus!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await fetch('/api/reject-user', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: username })
+                    });
+                    Swal.fire({
+                        title: 'Ditolak!',
+                        text: `Pengajuan akun @${username} telah ditolak.`,
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    loadPendingUsers(); 
+                } catch (error) {
+                    Swal.fire('Gagal!', 'Terjadi masalah saat menghubungi server.', 'error');
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

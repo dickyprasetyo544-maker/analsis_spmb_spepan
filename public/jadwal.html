@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal Lengkap - SPMB Jatim 2026</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f4f8;
+            color: #2d3748;
+        }
+
+        /* === GAYA TOMBOL MENGAMBANG (PUSAT INFORMASI) === */
+        .float-info {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 30px; /* Posisi di pojok kanan bawah */
+            right: 30px;
+            background-color: #3b82f6; 
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 26px;
+            box-shadow: 0px 4px 15px rgba(59, 130, 246, 0.4);
+            z-index: 1060;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .float-info:hover {
+            background-color: #2563eb;
+            box-shadow: 0px 8px 25px rgba(37, 99, 235, 0.6);
+            color: #FFF;
+            transform: scale(1.1) translateY(-5px);
+        }
+
+        /* Animasi Item Menu Dropdown */
+        .dropdown-menu-custom .dropdown-item {
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .dropdown-menu-custom .dropdown-item:hover {
+            background-color: #eff6ff;
+            color: #1d4ed8;
+            transform: translateX(3px);
+        }
+
+        /* Penyesuaian Ukuran untuk Layar HP */
+        @media (max-width: 768px) {
+            .float-info {
+                width: 50px; height: 50px;
+                bottom: 20px;
+                right: 20px;
+                font-size: 22px;
+            }
+        }
+
+        .navbar-custom {
+            background-color: #ffffff;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .hero-schedule {
+            background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
+            color: white;
+            padding: 3rem 1rem;
+            border-radius: 0 0 40px 40px;
+            margin-bottom: -40px;
+        }
+
+        /* Container Tabel Premium */
+        .table-container {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .table-responsive {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        /* Styling Tabel */
+        .table {
+            margin-bottom: 0;
+            vertical-align: middle;
+        }
+
+        .table thead th {
+            background-color: #f8fafc;
+            color: #4a5568;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            padding: 15px;
+            border-top: none;
+        }
+
+        /* Header Grup Kegiatan */
+        .group-header {
+            background-color: #edf2f7 !important;
+            font-weight: 700;
+            color: #2c5282;
+            font-size: 0.95rem;
+        }
+
+        .group-header-sub {
+            background-color: #f7fafc !important;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 0.85rem;
+            border-left: 4px solid #4299e1;
+        }
+
+        .table tbody td {
+            padding: 14px 15px;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        /* Badge Status Online/Offline */
+        .badge-status {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.75rem;
+        }
+        .bg-online { background-color: #ebf8ff; color: #3182ce; border: 1px solid #bee3f8; }
+        .bg-offline { background-color: #fff5f5; color: #c53030; border: 1px solid #fed7d7; }
+        .bg-hybrid { background-color: #f0fff4; color: #38a169; border: 1px solid #c6f6d5; }
+
+        /* Icon penanda waktu */
+        .time-text {
+            color: #718096;
+            font-size: 0.85rem;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .hero-schedule { padding: 2.5rem 1rem; border-radius: 0 0 25px 25px; }
+            .table-container { padding: 10px; border-radius: 15px; }
+            .table tbody td { font-size: 0.8rem; padding: 10px; }
+            .badge-status { padding: 4px 8px; font-size: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-custom sticky-top py-3 shadow-sm">
+    <div class="container">
+        <a href="dashboard-siswa.html" class="btn btn-light rounded-pill border shadow-sm fw-medium">
+            <i class="bi bi-arrow-left me-1"></i> Kembali ke Beranda
+        </a>
+        <div class="d-flex align-items-center">
+            <img src="logo.png" alt="Logo" width="30" height="30" class="me-2">
+            <div class="text-end">
+                <span class="fw-bold text-primary d-block d-sm-inline">Panduan SPMB 2026</span>
+                <small class="text-muted d-block" style="font-size: 10px; margin-top: -5px;">dibuat oleh dhickz666</small>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <div class="hero-schedule text-center">
+        <div class="container">
+            <h2 class="fw-bold mb-2">Jadwal Pelaksanaan</h2>
+            <p class="opacity-75 small mb-0">Pastikan Anda mencatat tanggal-tanggal penting di bawah ini agar tidak terlewat.</p>
+        </div>
+    </div>
+
+    <div class="container" style="position: relative; z-index: 5; margin-top: 20px;">
+        <div class="table-container">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width: 40%;">Kegiatan</th>
+                            <th style="width: 25%;">Tanggal</th>
+                            <th style="width: 20%;">Waktu</th>
+                            <th style="width: 15%;">Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="group-header">
+                            <td colspan="4">A. UMUM</td>
+                        </tr>
+                        <tr>
+                            <td>Sosialisasi Juknis SPMB Jatim 2026</td>
+                            <td>Maret s.d. Mei 2026</td>
+                            <td>Jam Kerja</td>
+                            <td><span class="badge-status bg-offline">Offline</span></td>
+                        </tr>
+
+                        <tr class="group-header">
+                            <td colspan="4">B. PRA PENDAFTARAN</td>
+                        </tr>
+                        <tr>
+                            <td>Entry nilai rapor oleh Kepala SMP/Sederajat</td>
+                            <td>11 – 19 Mei 2026</td>
+                            <td><span class="time-text">01.00 – 23.59 WIB</span></td>
+                            <td><span class="badge-status bg-online">Online</span></td>
+                        </tr>
+                        <tr>
+                            <td>Verifikasi nilai rapor oleh calon Murid baru</td>
+                            <td>18 – 21 Mei 2026</td>
+                            <td><span class="time-text">01.00 – 23.59 WIB</span></td>
+                            <td><span class="badge-status bg-online">Online</span></td>
+                        </tr>
+                        <tr>
+                            <td>Pembetulan nilai rapor oleh Kepala SMP/Sederajat</td>
+                            <td>21 - 26 Mei 2026</td>
+                            <td><span class="time-text">01.00 – 23.59 WIB</span></td>
+                            <td><span class="badge-status bg-online">Online</span></td>
+                        </tr>
+                        <tr>
+                            <td>Pengambilan PIN secara mandiri oleh calon Murid</td>
+                            <td>28 Mei - 9 Juni 2026</td>
+                            <td><span class="time-text">01.00 – 23.59 WIB</span></td>
+                            <td><span class="badge-status bg-online">Online</span></td>
+                        </tr>
+                        <tr>
+                            <td>Verifikasi & Validasi Dokumen (Wajib Datang ke Sekolah)</td>
+                            <td>29 Mei - 10 Juni 2026</td>
+                            <td><span class="time-text">08.00 – 16.00 WIB</span></td>
+                            <td><span class="badge-status bg-offline">SMA/SMK</span></td>
+                        </tr>
+                        <tr>
+                            <td>Latihan Pendaftaran</td>
+                            <td>8 – 9 Juni 2026</td>
+                            <td><span class="time-text">01.00 – 23.59 WIB</span></td>
+                            <td><span class="badge-status bg-online">Online</span></td>
+                        </tr>
+                        <tr>
+                            <td>Tes Kesehatan (Syarat SMK Tertentu)</td>
+                            <td>29 Mei – 10 Juni 2026</td>
+                            <td><span class="time-text">08.00 – 16.00 WIB</span></td>
+                            <td><span class="badge-status bg-offline">SMK Negeri</span></td>
+                        </tr>
+
+                        <tr class="group-header">
+                            <td colspan="4">C. PELAKSANAAN PENDAFTARAN</td>
+                        </tr>
+
+                        <tr class="group-header-sub">
+                            <td colspan="4">TAHAP I: JALUR DOMISILI SMA/SMK</td>
+                        </tr>
+                        <tr>
+                            <td>Pendaftaran & Penutupan</td>
+                            <td>11 – 12 Juni 2026</td>
+                            <td><span class="time-text">00.01 – 21.00 WIB</span></td>
+                            <td><span class="badge-status bg-online">Online</span></td>
+                        </tr>
+                        <tr>
+                            <td>Pengumuman & Cetak Bukti Penerimaan</td>
+                            <td>13 Juni 2026</td>
+                            <td><span class="time-text">08.00 / 09.00 WIB</span></td>
+                            <td><span class="badge-status bg-online">Online</span></td>
+                        </tr>
+                        <tr>
+                            <td>Daftar Ulang di Sekolah Tujuan</td>
+                            <td>13 dan 15 Juni 2026</td>
+                            <td><span class="time-text">09.00 – 16.00 WIB</span></td>
+                            <td><span class="badge-status bg-offline">Di Sekolah</span></td>
+                        </tr>
+
+                        <tr class="group-header-sub">
+                            <td colspan="4">TAHAP II: AFIRMASI, MUTASI, PRESTASI LOMBA</td>
+                        </tr>
+                        <tr>
+                            <td>Pendaftaran</td>
+                            <td>17 – 18 Juni 2026</td>
+                            <td><span class="time-text">00.01 – 21.00 WIB</span></td>
+                            <td><span class="badge-status bg-online">Online</span></td>
+                        </tr>
+                        <tr>
+                            <td>Verifikasi & Validasi oleh Sekolah</td>
+                            <td>18, 19, dan 20 Juni 2026</td>
+                            <td><span class="time-text">s.d 16.00 WIB</span></td>
+                            <td><span class="badge-status bg-hybrid">Online/Offline</span></td>
+                        </tr>
+                        <tr>
+                            <td>Pengumuman & Cetak Bukti</td>
+                            <td>22 Juni 2026</td>
+                            <td><span class="time-text">09.00 WIB</span></td>
+                            <td><span class="badge-status bg-online">Online</span></td>
+                        </tr>
+                        <tr>
+                            <td>Daftar Ulang</td>
+                            <td>22 – 23 Juni 2026</td>
+                            <td><span class="time-text">09.00 – 16.00 WIB</span></td>
+                            <td><span class="badge-status bg-offline">Di Sekolah</span></td>
+                        </tr>
+
+                        <tr class="group-header-sub">
+                            <td colspan="4">TAHAP III: JALUR NILAI PRESTASI AKADEMIK SMA</td>
+                        </tr>
+                        <tr>
+                            <td>Pendaftaran</td>
+                            <td>24 – 25 Juni 2026</td>
+                            <td><span class="time-text">00.01 – 21.00 WIB</span></td>
+                            <td><span class="badge-status bg-online">Online</span></td>
+                        </tr>
+                        <tr>
+                            <td>Pengumuman & Daftar Ulang</td>
+                            <td>26 – 27 Juni 2026</td>
+                            <td><span class="time-text">08.00 / 09.00 WIB</span></td>
+                            <td><span class="badge-status bg-hybrid">Online/Sekolah</span></td>
+                        </tr>
+                        <tr>
+                            <td>Pengumuman Pemenuhan Kuota</td>
+                            <td>29 Juni 2026</td>
+                            <td><span class="time-text">09.00 WIB</span></td>
+                            <td><span class="badge-status bg-online">Online</span></td>
+                        </tr>
+
+                        <tr class="group-header-sub">
+                            <td colspan="4">TAHAP IV: JALUR NILAI PRESTASI AKADEMIK SMK</td>
+                        </tr>
+                        <tr>
+                            <td>Pendaftaran</td>
+                            <td>30 Juni – 1 Juli 2026</td>
+                            <td><span class="time-text">00.01 – 21.00 WIB</span></td>
+                            <td><span class="badge-status bg-online">Online</span></td>
+                        </tr>
+                        <tr>
+                            <td>Pengumuman & Daftar Ulang</td>
+                            <td>2 – 3 Juli 2026</td>
+                            <td><span class="time-text">08.00 / 09.00 WIB</span></td>
+                            <td><span class="badge-status bg-hybrid">Online/Sekolah</span></td>
+                        </tr>
+                        <tr>
+                            <td>Pemenuhan Kuota (Pengumuman & Daftar Ulang)</td>
+                            <td>4 Juli 2026</td>
+                            <td><span class="time-text">09.00 – 16.00 WIB</span></td>
+                            <td><span class="badge-status bg-hybrid">Online/Sekolah</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="dropup">
+        <button class="float-info shadow-lg border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Pusat Informasi">
+            <i class="bi bi-journal-bookmark-fill"></i>
+        </button>
+        
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-custom shadow-lg border-0 rounded-4 mb-3 p-2" style="min-width: 250px;">
+            <li><h6 class="dropdown-header fw-bold text-dark"><i class="bi bi-info-circle me-1"></i> PUSAT INFORMASI</h6></li>
+            <li><hr class="dropdown-divider"></li>
+            
+            <li><a class="dropdown-item py-2 rounded-3" href="ambilpin.html"><i class="bi bi-key text-warning me-2 fs-5"></i> Tata Cara Ambil PIN</a></li>
+            <li><a class="dropdown-item py-2 rounded-3" href="kriteria.html"><i class="bi bi-sort-numeric-up text-info me-2 fs-5"></i> Kriteria Pemeringkatan</a></li>
+            <li><a class="dropdown-item py-2 rounded-3" href="jadwal.html"><i class="bi bi-calendar-check text-primary me-2 fs-5"></i> Jadwal Lengkap SPMB</a></li>
+            
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <a class="dropdown-item py-2 rounded-3 fw-bold text-success d-flex align-items-center" href="juknis.pdf" download target="_blank">
+                    <i class="bi bi-file-earmark-pdf-fill me-2 fs-5"></i> Unduh Juknis 2026
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="container text-center text-muted small pb-5">
+        <p>&copy; 2026 SMP NEGERI 8 PROBOLINGGO</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
