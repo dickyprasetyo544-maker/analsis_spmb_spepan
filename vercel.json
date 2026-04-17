@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "name": "spmb-app",
   "builds": [
     {
       "src": "server.js",
@@ -13,7 +14,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/server.js"
+      "dest": "server.js"
     },
     {
       "src": "/(.*)",
